@@ -1,0 +1,71 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "58a3dbea-9ed7-4d75-af54-7b178f90a181",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import torch\n",
+    "from diffusers import StableDiffusionImg2ImgPipeline\n",
+    "from PIL import Image, ImageFilter\n",
+    "\n",
+    "device = \"cuda\" if torch.cuda.is_available() else \"cpu\"\n",
+    "\n",
+    "pipe = StableDiffusionImg2ImgPipeline.from_pretrained(\n",
+    "    \"runwayml/stable-diffusion-v1-5\",\n",
+    "    torch_dtype=torch.float16 if device == \"cuda\" else torch.float32\n",
+    ").to(device)\n",
+    "\n",
+    "pipe.enable_attention_slicing()\n",
+    "pipe.safety_checker = None\n",
+    "\n",
+    "\n",
+    "def stylize(image, style, strength, use_structure_guidance=False):\n",
+    "    if image is None:\n",
+    "        return None\n",
+    "\n",
+    "    image = image.convert(\"RGB\")\n",
+    "    image = image.resize((512, 512))\n",
+    "\n",
+    "    # 简单结构引导：边缘增强\n",
+    "    if use_structure_guidance:\n",
+    "        image = image.filter(ImageFilter.EDGE_ENHANCE)\n",
+    "\n",
+    "    prompt = f\"{style} painting style\"\n",
+    "\n",
+    "    result = pipe(\n",
+    "        prompt=prompt,\n",
+    "        image=image,\n",
+    "        strength=strength,\n",
+    "        guidance_scale=7.5,\n",
+    "        num_inference_steps=20\n",
+    "    ).images[0]\n",
+    "\n",
+    "    return result"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.9"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
