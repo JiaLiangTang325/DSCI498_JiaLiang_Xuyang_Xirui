@@ -3,7 +3,7 @@
 
 A research-oriented project exploring **image stylization using diffusion models** and comparing them with **traditional CNN-based neural style transfer** methods.
 
-This project investigates the effectiveness of **Stable Diffusion for artistic style transfer**, analyzes the influence of **stylization strength**, and evaluates results using **quantitative metrics such as SSIM and CLIP Score**.
+This project investigates the effectiveness of **Stable Diffusion for artistic style transfer**, analyzes the influence of **stylization strength**, and evaluates results using **quantitative metrics such as SSIM and CLIP Score**. A complete **web-based system** is also developed for interactive stylization.
 
 ---
 
@@ -21,6 +21,33 @@ This project explores:
 - Comparison with **CNN-based neural style transfer**
 - The impact of **stylization strength on content preservation**
 - Quantitative evaluation using **SSIM and CLIP Score**
+- Development of a **web-based stylization system**
+
+---
+
+# Web Application (Final System)
+
+We implemented a **Gradio-based web interface** for interactive image stylization.
+
+### Features
+
+- Upload an image
+- Select artistic style (Van Gogh / Monet / Cubism)
+- Adjust stylization strength
+- Enable optional structural guidance
+- Generate stylized output
+
+### Run the App
+
+```bash
+python app/app.py
+```
+
+Then open:
+
+```
+http://127.0.0.1:7860
+```
 
 ---
 
@@ -28,6 +55,12 @@ This project explores:
 
 ```
 diffusion-style-transfer-project
+│
+├── app
+│   └── app.py                  # Web interface (Gradio)
+│
+├── models
+│   └── diffusion_pipeline.py  # Stylization pipeline
 │
 ├── data
 │   ├── content
@@ -46,9 +79,7 @@ diffusion-style-transfer-project
 │   ├── 05_strength_experiment.ipynb
 │   └── 06_quantitative_evaluation.ipynb
 │
-├── results
-│   └── generated images
-│
+├── results                     # Generated images
 ├── README.md
 └── requirements.txt
 ```
@@ -157,12 +188,23 @@ strength = 0.9
 
 Key observation:
 
-- Lower strength preserves content structure.
-- Higher strength increases stylization but may distort image structure.
+- Lower strength preserves content structure
+- Higher strength increases stylization but may distort structure
 
 ---
 
-## 5. Quantitative Evaluation
+## 5. Structural Guidance
+
+To improve structural consistency, we introduce a simple structural guidance method:
+
+- Edge enhancement preprocessing
+- Helps preserve object boundaries
+
+This serves as a lightweight alternative to more complex methods such as ControlNet.
+
+---
+
+## 6. Quantitative Evaluation
 
 Two metrics are used to evaluate stylization results.
 
@@ -182,40 +224,40 @@ Higher values indicate better structural preservation.
 
 ### CLIP Score
 
-Uses a **CLIP model** to evaluate the semantic similarity between generated images and textual prompts.
+Uses a **CLIP model** to evaluate semantic similarity between generated images and textual prompts.
 
-Higher values indicate stronger alignment with the target style description.
+Higher values indicate stronger alignment with the target style.
 
 ---
 
 # Experimental Results
 
-Example results from the evaluation stage:
+Example results:
 
 ```
 Average SSIM ≈ 0.32
 CLIP Score ≈ 0.28
 ```
 
-Interpretation:
+Findings:
 
-- Diffusion stylization produces visually rich styles.
-- Content structure is partially preserved.
-- Stylization strength significantly affects results.
+- Diffusion generates visually rich styles
+- Content is partially preserved
+- Stylization strength affects structure–style trade-off
 
 ---
 
 # Known Issues
 
-During batch generation, a small number of generated images appeared completely black.
+During batch generation, some images appeared completely black.
 
-Possible reasons include:
+Possible causes:
 
-- The stochastic nature of diffusion models
-- High stylization strength parameters
-- GPU memory limitations during batch inference
+- Diffusion randomness
+- High stylization strength
+- GPU memory limitations
 
-Invalid outputs were excluded from the quantitative evaluation.
+These outputs were excluded from evaluation.
 
 ---
 
@@ -223,7 +265,7 @@ Invalid outputs were excluded from the quantitative evaluation.
 
 Install dependencies:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -233,6 +275,7 @@ Example requirements:
 torch
 diffusers
 transformers
+gradio
 open_clip_torch
 scikit-image
 matplotlib
@@ -242,28 +285,22 @@ matplotlib
 
 # Hardware
 
-Experiments were conducted on:
-
-```
-GPU: NVIDIA GPU (≈8GB VRAM)
-Framework: PyTorch
-Library: Hugging Face Diffusers
-```
+- GPU: ~8GB VRAM
+- Framework: PyTorch
+- Library: Hugging Face Diffusers
 
 ---
 
 # Future Work
 
-Planned extensions include:
-
-- Structural guidance using **ControlNet**
-- Human **user study** for perceptual evaluation
-- Development of a **web-based stylization interface**
+- Advanced structural guidance (e.g., ControlNet)
+- User study for perceptual evaluation
+- Deployment as an online service
 
 ---
 
 # References
 
-1. Gatys et al., *Image Style Transfer Using Convolutional Neural Networks*
-2. Rombach et al., *High-Resolution Image Synthesis with Latent Diffusion Models*
+1. Gatys et al., *Image Style Transfer Using Convolutional Neural Networks*  
+2. Rombach et al., *High-Resolution Image Synthesis with Latent Diffusion Models*  
 3. Radford et al., *Learning Transferable Visual Models From Natural Language Supervision*
