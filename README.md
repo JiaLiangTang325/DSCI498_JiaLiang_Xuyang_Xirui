@@ -7,35 +7,29 @@ This project investigates the effectiveness of **Stable Diffusion for artistic s
 
 ---
 
-# Example Results
-
-| Original | Van Gogh | Monet | Cubism |
-|----------|----------|--------|--------|
-| ![](results/original.png) | ![](results/content_01_vangogh.png) | ![](results/content_01_monet.png) | ![](results/content_01_cubism.png) |
-
----
-
 # Project Overview
 
-Image style transfer transforms a content image into an artistic style while preserving structure.
+Image style transfer aims to transform a content image into the artistic style of a target domain (e.g., Van Gogh, Monet, Cubism).
 
-Traditional methods rely on **CNN-based neural style transfer**, but they suffer from limited diversity and slow optimization.
+Traditional approaches rely on **CNN-based neural style transfer**, which optimize feature representations in deep convolutional networks. While effective, these methods often produce limited diversity and require computationally expensive optimization.
+
+Recent **diffusion models** provide a new paradigm for high-quality image generation and stylization.
 
 This project explores:
 
-- Diffusion-based image stylization using **Stable Diffusion**
-- Comparison with **CNN-based neural style transfer**
+- Diffusion-based image stylization using Stable Diffusion
+- Comparison with CNN-based neural style transfer
 - Analysis of stylization strength
 - Structural guidance for improved consistency
-- Development of a **web-based stylization system**
+- Development of a web-based stylization system
 
 ---
 
 # Web Application (Final System)
 
-We implemented a **Gradio-based web interface** for real-time stylization.
+We developed an interactive web application using **Gradio**.
 
-### Features
+## Features
 
 - Upload an image
 - Select artistic style (Van Gogh / Monet / Cubism)
@@ -43,7 +37,7 @@ We implemented a **Gradio-based web interface** for real-time stylization.
 - Enable structural guidance
 - Generate stylized output
 
-### Run the App
+## Run the App
 
 ```bash
 python app/app.py
@@ -55,7 +49,7 @@ Then open the public link generated in the terminal:
 https://xxxxx.gradio.live
 ```
 
-> Note: The link is temporary and active only while the app is running.
+> Note: The link is temporary and only active while the application is running.
 
 ---
 
@@ -65,17 +59,24 @@ https://xxxxx.gradio.live
 diffusion-style-transfer-project
 │
 ├── app
-│   └── app.py                  # Web interface
+│   └── app.py
 │
 ├── models
-│   └── diffusion_pipeline.py  # Core stylization logic
+│   └── diffusion_pipeline.py
 │
 ├── data
 │   ├── content
 │   └── style
 │
-├── notebooks                  # Experiments
-├── results                    # Generated images
+├── notebooks
+│   ├── 01_diffusion_test.ipynb
+│   ├── 02_style_transfer.ipynb
+│   ├── 03_batch_style_transfer.ipynb
+│   ├── 04_cnn_style_transfer.ipynb
+│   ├── 05_strength_experiment.ipynb
+│   └── 06_quantitative_evaluation.ipynb
+│
+├── results
 ├── README.md
 └── requirements.txt
 ```
@@ -86,7 +87,7 @@ diffusion-style-transfer-project
 
 ## Diffusion-Based Stylization
 
-We use **Stable Diffusion (img2img)**:
+We use Stable Diffusion (img2img) to generate stylized images:
 
 ```
 content image → diffusion model → stylized image
@@ -106,14 +107,14 @@ Cubism painting style
 
 We compare with traditional neural style transfer:
 
-- CNN → better structure
-- Diffusion → richer artistic styles
+- CNN → better structure preservation  
+- Diffusion → richer artistic styles  
 
 ---
 
 ## Stylization Strength
 
-We study the `strength` parameter:
+We study the effect of the `strength` parameter:
 
 | Strength | Effect |
 |---------|--------|
@@ -125,7 +126,7 @@ We study the `strength` parameter:
 
 ## Structural Guidance
 
-We introduce a simple method:
+We introduce a simple structural guidance method:
 
 - Edge enhancement preprocessing
 - Improves structure preservation
@@ -136,11 +137,11 @@ We introduce a simple method:
 
 ### SSIM
 
-Measures structure similarity.
+Measures structural similarity between original and stylized images.
 
 ### CLIP Score
 
-Measures style alignment.
+Measures alignment between generated image and target style.
 
 ---
 
@@ -151,21 +152,21 @@ Average SSIM ≈ 0.32
 CLIP Score ≈ 0.28
 ```
 
-Findings:
+Key observations:
 
-- Diffusion produces diverse artistic styles
+- Diffusion produces visually rich styles
 - Structure is partially preserved
-- Strength controls trade-off
+- Stylization strength controls trade-off
 
 ---
 
 # Known Issues
 
-Some outputs may appear black due to:
+Some generated images may appear black due to:
 
 - Diffusion randomness
 - High stylization strength
-- GPU memory limits
+- GPU memory limitations
 
 ---
 
@@ -187,8 +188,8 @@ pip install -r requirements.txt
 
 # Future Work
 
-- ControlNet for advanced structural guidance
-- User study evaluation
+- Advanced structural guidance (e.g., ControlNet)
+- User study for perceptual evaluation
 - Online deployment
 
 ---
