@@ -27,7 +27,7 @@ demo = gr.Interface(
             label="Stylization Strength"
         ),
         gr.Checkbox(
-            label="Enable Simple Structural Guidance",
+            label="Enable Structural Guidance",
             value=False
         )
     ],
@@ -35,8 +35,8 @@ demo = gr.Interface(
     title="🎨 Diffusion-Based Image Stylization",
     description=(
         "Upload an image, choose an artistic style, adjust the stylization strength, "
-        "and optionally enable simple structural guidance."
+        "and optionally enable structural guidance."
     )
 )
 
-demo.launch()
+demo.launch(share=True)
