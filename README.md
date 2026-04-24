@@ -7,34 +7,40 @@ This project investigates the effectiveness of **Stable Diffusion for artistic s
 
 ---
 
+# Example Results
+
+| Original | Van Gogh | Monet | Cubism |
+|----------|----------|--------|--------|
+| ![](results/original.png) | ![](results/content_01_vangogh.png) | ![](results/content_01_monet.png) | ![](results/content_01_cubism.png) |
+
+---
+
 # Project Overview
 
-Image style transfer aims to transform a content image into the artistic style of a target domain (e.g., Van Gogh, Monet, Cubism).
+Image style transfer transforms a content image into an artistic style while preserving structure.
 
-Traditional approaches rely on **CNN-based neural style transfer**, which optimizes feature representations in deep convolutional networks. While effective, these methods often produce limited diversity and may require expensive optimization.
-
-Recent **diffusion models** have demonstrated strong generative capabilities and provide a new paradigm for image stylization.
+Traditional methods rely on **CNN-based neural style transfer**, but they suffer from limited diversity and slow optimization.
 
 This project explores:
 
 - Diffusion-based image stylization using **Stable Diffusion**
 - Comparison with **CNN-based neural style transfer**
-- The impact of **stylization strength on content preservation**
-- Quantitative evaluation using **SSIM and CLIP Score**
+- Analysis of stylization strength
+- Structural guidance for improved consistency
 - Development of a **web-based stylization system**
 
 ---
 
 # Web Application (Final System)
 
-We implemented a **Gradio-based web interface** for interactive image stylization.
+We implemented a **Gradio-based web interface** for real-time stylization.
 
 ### Features
 
 - Upload an image
 - Select artistic style (Van Gogh / Monet / Cubism)
 - Adjust stylization strength
-- Enable optional structural guidance
+- Enable structural guidance
 - Generate stylized output
 
 ### Run the App
@@ -43,11 +49,13 @@ We implemented a **Gradio-based web interface** for interactive image stylizatio
 python app/app.py
 ```
 
-Then open:
+Then open the public link generated in the terminal:
 
 ```
-http://127.0.0.1:7860
+https://xxxxx.gradio.live
 ```
+
+> Note: The link is temporary and active only while the app is running.
 
 ---
 
@@ -57,29 +65,17 @@ http://127.0.0.1:7860
 diffusion-style-transfer-project
 │
 ├── app
-│   └── app.py                  # Web interface (Gradio)
+│   └── app.py                  # Web interface
 │
 ├── models
-│   └── diffusion_pipeline.py  # Stylization pipeline
+│   └── diffusion_pipeline.py  # Core stylization logic
 │
 ├── data
 │   ├── content
-│   │   └── input images
-│   │
 │   └── style
-│       ├── vangogh
-│       ├── monet
-│       └── cubism
 │
-├── notebooks
-│   ├── 01_diffusion_test.ipynb
-│   ├── 02_style_transfer.ipynb
-│   ├── 03_batch_style_transfer.ipynb
-│   ├── 04_cnn_style_transfer.ipynb
-│   ├── 05_strength_experiment.ipynb
-│   └── 06_quantitative_evaluation.ipynb
-│
-├── results                     # Generated images
+├── notebooks                  # Experiments
+├── results                    # Generated images
 ├── README.md
 └── requirements.txt
 ```
@@ -88,24 +84,12 @@ diffusion-style-transfer-project
 
 # Methodology
 
-The project consists of several experimental stages.
+## Diffusion-Based Stylization
 
----
-
-## 1. Diffusion-Based Stylization
-
-Implemented using **Stable Diffusion img2img pipeline** from the Hugging Face `diffusers` library.
-
-Process:
+We use **Stable Diffusion (img2img)**:
 
 ```
-content image
-      ↓
-diffusion img2img
-      ↓
-style prompt
-      ↓
-stylized image
+content image → diffusion model → stylized image
 ```
 
 Example prompts:
@@ -118,121 +102,49 @@ Cubism painting style
 
 ---
 
-## 2. Batch Stylization
+## CNN-Based Baseline
 
-A batch pipeline is implemented to generate stylized images for multiple content inputs and style prompts.
+We compare with traditional neural style transfer:
 
-Input:
-
-- Content images from `data/content`
-
-Output:
-
-- Stylized images stored in `results/`
-
-Naming convention:
-
-```
-contentID_style.png
-```
-
-Example:
-
-```
-content_01_vangogh.png
-content_02_monet.png
-content_03_cubism.png
-```
+- CNN → better structure
+- Diffusion → richer artistic styles
 
 ---
 
-## 3. CNN-Based Neural Style Transfer
+## Stylization Strength
 
-To provide a baseline comparison, traditional **Neural Style Transfer** based on CNN feature optimization is implemented.
+We study the `strength` parameter:
 
-Reference:
-
-Gatys et al., *Image Style Transfer Using Convolutional Neural Networks*
-
-Pipeline:
-
-```
-content image
-+
-style image
-↓
-CNN feature optimization
-↓
-stylized output
-```
+| Strength | Effect |
+|---------|--------|
+| 0.3 | High structure preservation |
+| 0.6 | Balanced |
+| 0.9 | Strong stylization |
 
 ---
 
-## 4. Stylization Strength Experiment
+## Structural Guidance
 
-Diffusion img2img introduces a parameter:
-
-```
-strength
-```
-
-which controls how strongly the output deviates from the original image.
-
-Experiments were conducted using:
-
-```
-strength = 0.3
-strength = 0.6
-strength = 0.9
-```
-
-Key observation:
-
-- Lower strength preserves content structure
-- Higher strength increases stylization but may distort structure
-
----
-
-## 5. Structural Guidance
-
-To improve structural consistency, we introduce a simple structural guidance method:
+We introduce a simple method:
 
 - Edge enhancement preprocessing
-- Helps preserve object boundaries
-
-This serves as a lightweight alternative to more complex methods such as ControlNet.
+- Improves structure preservation
 
 ---
 
-## 6. Quantitative Evaluation
+## Quantitative Evaluation
 
-Two metrics are used to evaluate stylization results.
+### SSIM
 
-### Structural Similarity (SSIM)
-
-Measures structural similarity between the original and stylized images.
-
-Range:
-
-```
-0 - 1
-```
-
-Higher values indicate better structural preservation.
-
----
+Measures structure similarity.
 
 ### CLIP Score
 
-Uses a **CLIP model** to evaluate semantic similarity between generated images and textual prompts.
-
-Higher values indicate stronger alignment with the target style.
+Measures style alignment.
 
 ---
 
 # Experimental Results
-
-Example results:
 
 ```
 Average SSIM ≈ 0.32
@@ -241,44 +153,26 @@ CLIP Score ≈ 0.28
 
 Findings:
 
-- Diffusion generates visually rich styles
-- Content is partially preserved
-- Stylization strength affects structure–style trade-off
+- Diffusion produces diverse artistic styles
+- Structure is partially preserved
+- Strength controls trade-off
 
 ---
 
 # Known Issues
 
-During batch generation, some images appeared completely black.
-
-Possible causes:
+Some outputs may appear black due to:
 
 - Diffusion randomness
 - High stylization strength
-- GPU memory limitations
-
-These outputs were excluded from evaluation.
+- GPU memory limits
 
 ---
 
 # Environment Setup
 
-Install dependencies:
-
 ```bash
 pip install -r requirements.txt
-```
-
-Example requirements:
-
-```
-torch
-diffusers
-transformers
-gradio
-open_clip_torch
-scikit-image
-matplotlib
 ```
 
 ---
@@ -293,14 +187,14 @@ matplotlib
 
 # Future Work
 
-- Advanced structural guidance (e.g., ControlNet)
-- User study for perceptual evaluation
-- Deployment as an online service
+- ControlNet for advanced structural guidance
+- User study evaluation
+- Online deployment
 
 ---
 
 # References
 
-1. Gatys et al., *Image Style Transfer Using Convolutional Neural Networks*  
-2. Rombach et al., *High-Resolution Image Synthesis with Latent Diffusion Models*  
-3. Radford et al., *Learning Transferable Visual Models From Natural Language Supervision*
+1. Gatys et al., Neural Style Transfer  
+2. Rombach et al., Stable Diffusion  
+3. Radford et al., CLIP
