@@ -1,6 +1,5 @@
 import streamlit as st
 from PIL import Image
-from models.diffusion_pipeline import stylize
 
 st.set_page_config(
     page_title="Diffusion-Based Image Stylization",
@@ -11,8 +10,8 @@ st.set_page_config(
 st.title("🎨 Diffusion-Based Image Stylization")
 
 st.write(
-    "Upload an image, choose an artistic style, adjust the stylization strength, "
-    "and optionally enable structural guidance."
+    "This is the web interface for our diffusion-based image stylization system. "
+    "The full Stable Diffusion model runs locally with GPU acceleration in our final demo video."
 )
 
 st.sidebar.header("Settings")
@@ -41,7 +40,7 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is None:
-    st.info("Please upload an image to start stylization.")
+    st.info("Please upload an image to start.")
 else:
     input_image = Image.open(uploaded_file).convert("RGB")
 
@@ -52,26 +51,12 @@ else:
         st.image(input_image, use_container_width=True)
 
     with col2:
-        st.subheader("Stylized Image")
+        st.subheader("Stylization Settings")
+        st.write(f"**Selected Style:** {style}")
+        st.write(f"**Strength:** {strength}")
+        st.write(f"**Structural Guidance:** {use_structure_guidance}")
 
-        if st.button("Generate Stylized Image"):
-            with st.spinner("Generating image... This may take some time."):
-                output_image = stylize(
-                    input_image,
-                    style,
-                    strength,
-                    use_structure_guidance
-                )
-
-            st.image(output_image, use_container_width=True)
-
-            output_path = "stylized_output.png"
-            output_image.save(output_path)
-
-            with open(output_path, "rb") as file:
-                st.download_button(
-                    label="Download Result",
-                    data=file,
-                    file_name="stylized_output.png",
-                    mime="image/png"
-                )
+        st.warning(
+            "Stable Diffusion inference is GPU-intensive. "
+            "The deployed cloud version shows the interface, while the final video demonstrates the working local GPU version."
+        )
