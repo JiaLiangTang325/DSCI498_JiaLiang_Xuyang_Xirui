@@ -46,7 +46,7 @@ Users can:
 
 ### Streamlit Web App Link
 
-https://dsci498jialiangxuyangxirui-hzh8czogghfdmlfs2sarrf.streamlit.app/
+<https://dsci498jialiangxuyangxirui-hzh8czogghfdmlfs2sarrf.streamlit.app/>
 
 ### Deployment Note
 
@@ -66,18 +66,23 @@ To run the local Gradio version:
 
 ```bash
 python app/app.py
+```
 
-The app provides:
+The local Gradio app provides:
 
-Image upload
-Style selection
-Stylization strength control
-Structural guidance option
-Actual Stable Diffusion image generation
+- Image upload
+- Style selection
+- Stylization strength control
+- Structural guidance option
+- Actual Stable Diffusion image generation
 
 During the final video presentation, the local GPU version is used to demonstrate the complete stylization process and generated results.
 
-Project Structure
+---
+
+## Project Structure
+
+```text
 diffusion-style-transfer-project
 │
 ├── app
@@ -103,46 +108,59 @@ diffusion-style-transfer-project
 ├── requirements.txt
 ├── README.md
 └── ReadMe.txt
-Dataset
+```
 
-The dataset used in this project consists of two types of images: content images and style reference images.
+---
 
-Content Images
+## Dataset
+
+The dataset used in this project consists of two types of images: **content images** and **style reference images**.
+
+### Content Images
 
 Content images are natural photographs used as input images for stylization.
 
-Approximately 100 content images were collected from public image sources such as Unsplash and Pexels. These images include landscapes, portraits, architecture, and everyday scenes.
+Approximately **100 content images** were collected from public image sources such as Unsplash and Pexels. These images include landscapes, portraits, architecture, and everyday scenes.
 
-Style Images
+### Style Images
 
 Style reference images were collected for three artistic categories:
 
-Van Gogh
-Monet
-Cubism
+- Van Gogh
+- Monet
+- Cubism
 
-Each style category contains approximately 10–15 reference images.
+Each style category contains approximately **10–15 reference images**.
 
 Since this project uses pretrained Stable Diffusion and does not train a model from scratch, the dataset is mainly used for testing, evaluation, and demonstration.
 
-Methodology
-1. Diffusion-Based Stylization
+---
+
+## Methodology
+
+### 1. Diffusion-Based Stylization
 
 We use Stable Diffusion in an image-to-image setting.
 
 The basic workflow is:
 
+```text
 content image → Stable Diffusion img2img → stylized image
+```
 
 Example prompts include:
 
+```text
 Van Gogh painting style
 Monet impressionist painting
 Cubism painting style
+```
 
 The model receives a content image and a style prompt, then generates a stylized output image.
 
-2. CNN-Based Baseline
+---
+
+### 2. CNN-Based Baseline
 
 To provide a comparison, we also implemented a traditional CNN-based neural style transfer method.
 
@@ -150,23 +168,29 @@ The CNN baseline is used to compare traditional neural style transfer with diffu
 
 General observations:
 
-CNN-based style transfer preserves structure better
-Diffusion-based stylization produces richer and more diverse artistic styles
-Diffusion models provide more flexible parameter control
-3. Stylization Strength Analysis
+- CNN-based style transfer preserves structure better
+- Diffusion-based stylization produces richer and more diverse artistic styles
+- Diffusion models provide more flexible parameter control
 
-We studied the effect of the strength parameter in the Stable Diffusion image-to-image pipeline.
+---
 
-The strength parameter controls how strongly the generated image deviates from the original input image.
+### 3. Stylization Strength Analysis
 
-Strength	Effect
-0.3	High structure preservation, weaker style effect
-0.6	Balanced structure and style
-0.9	Strong stylization, possible structure distortion
+We studied the effect of the `strength` parameter in the Stable Diffusion image-to-image pipeline.
+
+The `strength` parameter controls how strongly the generated image deviates from the original input image.
+
+| Strength | Effect |
+|---|---|
+| 0.3 | High structure preservation, weaker style effect |
+| 0.6 | Balanced structure and style |
+| 0.9 | Strong stylization, possible structure distortion |
 
 This experiment demonstrates the trade-off between content preservation and artistic stylization.
 
-4. Structural Guidance
+---
+
+### 4. Structural Guidance
 
 We introduced a simple structural guidance method using edge enhancement preprocessing.
 
@@ -174,56 +198,70 @@ The purpose is to strengthen object boundaries before stylization and improve st
 
 This lightweight method serves as a practical alternative to more advanced structural control approaches such as ControlNet.
 
-5. Quantitative Evaluation
+---
+
+### 5. Quantitative Evaluation
 
 We used two metrics to evaluate the generated results.
 
-SSIM
+#### SSIM
 
 SSIM measures structural similarity between the original content image and the stylized output.
 
 A higher SSIM value indicates better structure preservation.
 
-CLIP Score
+#### CLIP Score
 
 CLIP Score measures semantic alignment between the generated image and the target style prompt.
 
 A higher CLIP Score indicates stronger alignment with the intended artistic style.
 
-Experimental Results
+---
+
+## Experimental Results
 
 Example quantitative results:
 
+```text
 Average SSIM ≈ 0.32
 CLIP Score ≈ 0.28
+```
 
 Key observations:
 
-Diffusion produces visually rich artistic styles
-Content structure is partially preserved
-Stylization strength strongly affects the structure-style trade-off
-Structural guidance helps improve edge and boundary preservation
-Diffusion results are generally more diverse than CNN-based results
-Known Issues
+- Diffusion produces visually rich artistic styles
+- Content structure is partially preserved
+- Stylization strength strongly affects the structure-style trade-off
+- Structural guidance helps improve edge and boundary preservation
+- Diffusion results are generally more diverse than CNN-based results
+
+---
+
+## Known Issues
 
 During batch stylization, some generated images appeared completely black.
 
 Possible causes include:
 
-Diffusion model randomness
-High stylization strength
-GPU memory limitations during batch inference
+- Diffusion model randomness
+- High stylization strength
+- GPU memory limitations during batch inference
 
 These invalid outputs were excluded from quantitative evaluation.
 
-Environment Setup
+---
+
+## Environment Setup
 
 Install dependencies:
 
+```bash
 pip install -r requirements.txt
+```
 
 Example dependencies:
 
+```text
 streamlit
 torch
 torchvision
@@ -233,46 +271,98 @@ accelerate
 safetensors
 pillow
 numpy
-How to Run
-Run the Streamlit Interface
+```
+
+---
+
+## How to Run
+
+### Run the Streamlit Interface
+
+```bash
 streamlit run streamlit_app.py
-Run the Local Gradio GPU Demo
+```
+
+### Run the Local Gradio GPU Demo
+
+```bash
 python app/app.py
+```
 
 The local Gradio version is recommended for full Stable Diffusion inference because it can use local GPU acceleration.
 
-Hardware
+---
+
+## Hardware
 
 The full image generation system was tested locally using:
 
+```text
 GPU: NVIDIA GPU with approximately 8GB VRAM
 Framework: PyTorch
 Library: Hugging Face Diffusers
+```
 
 The deployed Streamlit version may not perform full Stable Diffusion inference efficiently due to limited cloud hardware resources.
 
-Final Deliverables
+---
+
+## Final Deliverables
 
 This project includes the following deliverables:
 
-Final presentation video
-Project poster
-Source code files
-Streamlit web app link
-Local Gradio demo for full GPU-based image generation
-Experimental notebooks
-Generated result images
-README and setup instructions
-Future Work
+- **Final presentation video**
+  - A recorded presentation explaining the project motivation, methodology, experiments, results, and web application demo.
 
-Possible future improvements include:
+- **Project poster**
+  - A one-page poster summarizing the project goal, method, results, and final system.
 
-Advanced structural guidance using ControlNet
-More extensive user study evaluation
-Online deployment with GPU-backed inference
-Support for additional artistic styles
-Faster inference optimization
-References
-Gatys et al., Neural Style Transfer
-Rombach et al., Stable Diffusion
-Radford et al., CLIP
+- **Source code files**
+  - All project code, including notebooks, web application files, model pipeline files, and utility files.
+
+- **Streamlit web app link**
+  - A deployed Streamlit web interface that demonstrates the user workflow.
+
+- **Local Gradio GPU demo**
+  - A local Gradio application used to demonstrate the full Stable Diffusion image generation process with GPU acceleration.
+
+- **Experimental notebooks**
+  - Jupyter notebooks for diffusion testing, style transfer experiments, batch generation, CNN baseline comparison, strength analysis, and quantitative evaluation.
+
+- **Generated result images**
+  - Stylized outputs generated from different content images, styles, and strength values.
+
+- **README and setup instructions**
+  - Documentation explaining the project structure, installation steps, running instructions, and deployment notes.
+
+---
+
+## Future Work
+
+Future improvements may include:
+
+- **Advanced structural guidance using ControlNet**
+  - ControlNet can provide stronger structure preservation through edge maps, depth maps, or pose-based guidance.
+
+- **More extensive user study evaluation**
+  - A larger user study could be conducted to compare human preferences between CNN-based and diffusion-based stylization results.
+
+- **GPU-backed online deployment**
+  - Future deployment could use a GPU-supported cloud service to enable full Stable Diffusion inference directly through the public web app.
+
+- **Additional artistic styles**
+  - More style categories could be added, such as watercolor, sketch, anime, oil painting, and abstract expressionism.
+
+- **Faster inference optimization**
+  - Future work could explore model acceleration techniques, reduced inference steps, smaller diffusion models, or optimized pipelines.
+
+- **Improved evaluation metrics**
+  - Additional metrics such as LPIPS, FID, or user preference scores could be included for a more complete evaluation.
+
+---
+
+## References
+
+1. Gatys et al., Neural Style Transfer  
+2. Rombach et al., Stable Diffusion  
+3. Radford et al., CLIP
